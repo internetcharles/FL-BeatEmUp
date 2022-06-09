@@ -32,10 +32,14 @@ public class Projectile : MonoBehaviour
                 transform.position = Vector2.Lerp(transform.position, target.transform.position, Time.deltaTime * speed);
             else
             {
-                //transform.position = Vector2.Lerp(transform.position, originalTargetPos, Time.deltaTime * speed);
+                // transform.position = Vector2.Lerp(transform.position, originalTargetPos, Time.deltaTime * speed);
                 transform.Translate((originalTargetPos - originPos).normalized * Time.deltaTime * speed);
             }
 
+        }
+        else if (weaponStats.manualWeapon)
+        {
+            transform.Translate((originalTargetPos - originPos).normalized * Time.deltaTime * speed);
         }
         else
         {
@@ -50,6 +54,11 @@ public class Projectile : MonoBehaviour
         this.target = target;
         originPos = transform.position;
         originalTargetPos = target.transform.position;
+    }
+
+    public void FireInDirection(Vector3 direction)
+    {
+        originalTargetPos = direction;
     }
 
     public void Collided(Enemy npc)

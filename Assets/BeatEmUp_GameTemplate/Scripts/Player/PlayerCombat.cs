@@ -151,7 +151,6 @@ public class PlayerCombat : MonoBehaviour {
 			if(action == "Beam" && GetComponent<PlayerMovement>().playerIsGrounded())
             {
 				doBeam();
-				Debug.Log("BEAM!!!!");
             }
 		}
 	}
@@ -180,10 +179,12 @@ public class PlayerCombat : MonoBehaviour {
 
 	void doBeam()
     {
-		playerState.SetState(PLAYERSTATE.BEAM);
-		animator.Beam();
-		Debug.Log("PLAYER STATE IS" + playerState.currentState);
-		LastAttackTime = Time.time;
+		if (PlayerInfo.instance.playerAbilities.Contains("beam"))
+        {
+			playerState.SetState(PLAYERSTATE.BEAM);
+			animator.Beam();
+			LastAttackTime = Time.time;
+		}
     }
 
 	//start defending

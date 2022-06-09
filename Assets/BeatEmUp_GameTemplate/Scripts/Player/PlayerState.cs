@@ -26,4 +26,5 @@ public enum PLAYERSTATE
 	PICKUPITEM,
 	KNOCKDOWN,
 	BEAM,
+	DASH
 };

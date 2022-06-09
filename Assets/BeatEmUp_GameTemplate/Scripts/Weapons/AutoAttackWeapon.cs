@@ -22,7 +22,7 @@ public class AutoAttackWeapon : MonoBehaviour
 
     private void Update()
     {
-        rangePreview.localScale = Vector3.one * weaponStats.range * 2;
+        rangePreview.localScale = Vector3.one * weaponStats.range;
     }
 
     public void AttackMode()
@@ -69,7 +69,7 @@ public class AutoAttackWeapon : MonoBehaviour
         GameObject closestGo = null;
         foreach (Collider2D col in enemiesInRange)
         {
-            if (col.tag == "Enemy" && col.GetComponent<HealthSystem>().CurrentHp > 0)
+            if (col.tag == "Enemy" && !col.GetComponent<EnemyActions>().isDead)
             {
                 float dist = Vector2.Distance(transform.position, col.transform.position);
                 if (dist < closestDist)

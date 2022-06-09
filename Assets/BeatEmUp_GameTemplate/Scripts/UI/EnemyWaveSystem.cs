@@ -77,9 +77,10 @@ public class EnemyWaveSystem : MonoBehaviour {
 				} else {
 					cam.SetNewClampPosition(positionMarker, 1.5f);
 				}
-				float enemySpawnY = 0f;
+				float enemySpawnY = -1.12f;
 				//enable the enemies of this wave
-				foreach(GameObject g in newWave.EnemyList){
+				foreach (GameObject g in newWave.EnemyList)
+				{
 					enemySpawnY += (newWave.EnemyList.Count / 4f);
 					GameObject enemyFighter = Instantiate(g, new Vector3(positionMarker.x, positionMarker.y + enemySpawnY, positionMarker.z), Quaternion.identity);
 					newWave.AddToLivingEnemies(g);

@@ -79,13 +79,11 @@ public class EnemyAI : EnemyActions {
 
 	private void OnCollisionEnter2D(Collision2D collision)
 	{
-		Debug.Log("COLLIDED");
 		handleCollision(collision.collider);
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		Debug.Log("COLLIDED TRIGGER");
 		handleCollision(collision);
 	}
 

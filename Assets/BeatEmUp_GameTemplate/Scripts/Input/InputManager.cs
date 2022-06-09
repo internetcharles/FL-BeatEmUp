@@ -18,7 +18,10 @@ public class InputManager : MonoBehaviour {
 	public KeyCode KickKey = KeyCode.X;
 	public KeyCode DefendKey = KeyCode.C;
 	public KeyCode JumpKey = KeyCode.Space;
-	public KeyCode BeamKey = KeyCode.Alpha1;
+	public KeyCode BeamKey = KeyCode.None;
+	public KeyCode DashKey = KeyCode.None;
+
+	private KeyCode[] keycodes = new KeyCode[] { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5 };
 
 	[Header("Joypad keys")]
 	public KeyCode JoypadPunch = KeyCode.JoystickButton2;
@@ -81,25 +84,35 @@ public class InputManager : MonoBehaviour {
 
 
 		//Combat input
-		if(Input.GetKeyDown(PunchKey)){
+		if(Input.GetKeyDown(PunchKey))
+		{
 			CombatInputEvent("Punch");
 		}
 
-		if(Input.GetKeyDown(KickKey)){
+		if(Input.GetKeyDown(KickKey))
+		{
 			CombatInputEvent("Kick");
 		}
 
-		if(Input.GetKey(DefendKey)){
+		if(Input.GetKey(DefendKey))
+		{
 			CombatInputEvent("Defend");
 		}
 
-		if(Input.GetKeyDown(JumpKey)){
+		if(Input.GetKeyDown(JumpKey))
+		{
 			CombatInputEvent("Jump");
 		}
 
         if(Input.GetKeyDown(BeamKey))
         {
 			CombatInputEvent("Beam");
+        }
+
+		if(Input.GetKeyDown(DashKey))
+        {
+			Debug.Log("Input event block");
+			CombatInputEvent("Dash");
         }
 	}
 
@@ -127,15 +140,32 @@ public class InputManager : MonoBehaviour {
 	}
 
 	void CreateTouchScreenControls(){
-		GameObject canvas = GameObject.FindObjectOfType<Canvas>().gameObject;
+		GameObject canvas = FindObjectOfType<Canvas>().gameObject;
 		if(canvas != null) {
-			TSC = GameObject.Instantiate(Resources.Load("UI_TouchScreenControls")) as GameObject;
+			TSC = Instantiate(Resources.Load("UI_TouchScreenControls")) as GameObject;
 			TSC.transform.SetParent(canvas.transform, false);
 		}
 	}
 
+	void AssignAbilities()
+    {
+		var abilities = PlayerInfo.instance.playerAbilities;
+		for (int i = 0; i < PlayerInfo.instance.playerAbilities.Count; i++)
+        {
+			if (abilities[i] == "beam")
+            {
+				BeamKey = keycodes[i];
+            }
+			if (abilities[i] == "dash")
+			{
+				DashKey = keycodes[i];
+			}
+		}
+    }
+
 	void OnLevelStart(){
 		levelInProgress = true;
+		AssignAbilities();
 	}
 
 	void OnLevelEnd(){

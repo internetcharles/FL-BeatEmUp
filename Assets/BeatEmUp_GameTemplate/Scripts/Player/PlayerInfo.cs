@@ -6,6 +6,7 @@ public class PlayerInfo : MonoBehaviour
 {
     public static PlayerInfo instance;
     public List<GameObject> playerPowerUps = new List<GameObject>();
+    public List<string> playerAbilities = new List<string>();
     private GameObject player;
 
     private void Awake()
@@ -34,5 +35,10 @@ public class PlayerInfo : MonoBehaviour
         {
             Instantiate(powerUp, player.transform);
         }
+    }
+
+    public void AddAbility(string ability)
+    {
+        playerAbilities.Add(ability);
     }
 }

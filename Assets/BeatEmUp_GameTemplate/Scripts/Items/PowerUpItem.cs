@@ -24,9 +24,17 @@ public class PowerUpItem : MonoBehaviour
         {
             if (powerUpToEnable != null)
             {
-                powerUpToEnable.gameObject.SetActive(true);
-                Instantiate(powerUpToEnable, collision.gameObject.transform);
-                PlayerInfo.instance.AddPowerUp(powerUpToEnable);
+                if (powerUpStats.ability)
+                {
+                    powerUpToEnable.gameObject.SetActive(true);
+                    PlayerInfo.instance.AddAbility(powerUpStats.itemName);
+                }
+                else
+                {
+                    powerUpToEnable.gameObject.SetActive(true);
+                    Instantiate(powerUpToEnable, collision.gameObject.transform);
+                    PlayerInfo.instance.AddPowerUp(powerUpToEnable);
+                }
                 if (onLevelComplete != null) onLevelComplete();
             }
 

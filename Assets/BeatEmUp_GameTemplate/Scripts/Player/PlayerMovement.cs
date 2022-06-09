@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour {
 	public float walkSpeed = 1f;
 	public float jumpTime = 9f;
 	public float jumpHeight = 2.5f;
+	public float dashTime = 2.5f;
+	public float dashDistance = 3;
 
 	public Rigidbody2D rb;
 	public DIRECTION currentDirection;
@@ -37,7 +39,8 @@ public class PlayerMovement : MonoBehaviour {
 		PLAYERSTATE.IDLE,
 		PLAYERSTATE.JUMPING,
 		PLAYERSTATE.JUMPKICK,
-		PLAYERSTATE.MOVING
+		PLAYERSTATE.MOVING,
+		PLAYERSTATE.DASH
 	};
 
 	void OnEnable() {
@@ -90,6 +93,20 @@ public class PlayerMovement : MonoBehaviour {
 
 			//start jump
 			if(playerState.currentState != PLAYERSTATE.JUMPING)	StartCoroutine (doJump());
+
+
+		}
+
+		if (action == "Dash" && MovementStates.Contains(playerState.currentState) && !isDead)
+        {
+			if (inputDirection.x > 0 || inputDirection.x < 0)
+            {
+				Debug.Log("DASH ATTEMPTED");
+				inputDirection = new Vector3(inputDirection.x, 0, 0);
+				Move(inputDirection * walkSpeed);
+
+				if (playerState.currentState != PLAYERSTATE.DASH) StartCoroutine(doDash());
+			}
 		}
 	}
 
@@ -127,9 +144,33 @@ public class PlayerMovement : MonoBehaviour {
 		isGrounded = true;
 	}
 
+	IEnumerator doDash()
+	{
+		float t = 0;
+		Vector3 startPos = GFX.transform.parent.localPosition;
+		Vector3 endPos = new Vector3(startPos.x + dashDistance * inputDirection.x, startPos.y, startPos.z);
+
+		playerState.SetState(PLAYERSTATE.DASH);
+		GFX.GetComponent<Animator>().SetFloat("AnimationSpeed", 1f / dashTime);
+		animator.Dash();
+
+		//going forward
+		while (t < 1)
+		{
+			GFX.transform.parent.localPosition = Vector3.Lerp(startPos, endPos, MathUtilities.Sinerp(0, 1, t));
+			t += Time.deltaTime / dashTime;
+			yield return null;
+		}
+
+		GFX.transform.parent.localPosition = endPos;
+
+		//show dust particles
+		animator.ShowDustEffect();
+	}
+
 	//move the character
 	void Move(Vector3 vector) {
-		if (playerState.currentState != PLAYERSTATE.JUMPING && playerState.currentState != PLAYERSTATE.JUMPKICK) {
+		if (playerState.currentState != PLAYERSTATE.JUMPING && playerState.currentState != PLAYERSTATE.JUMPKICK && playerState.currentState != PLAYERSTATE.DASH) {
 
 			//removes any existing y offset
 			if(isGrounded) GFX.transform.localPosition = Vector3.zero;

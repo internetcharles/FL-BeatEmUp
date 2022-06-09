@@ -59,6 +59,13 @@ public class PlayerAnimator : MonoBehaviour {
 		StartCoroutine (WaitForAnimationFinish ("Jump"));
 	}
 
+	public void Dash()
+    {
+		animator.SetBool("Dash", false);
+		animator.SetTrigger("Dash");
+		StartCoroutine(WaitForAnimationFinish("Jump"));
+    }
+
 	public void Hit() {
 		animator.SetTrigger ("Hit");
 		StartCoroutine (WaitForAnimationFinish ("Hit"));
