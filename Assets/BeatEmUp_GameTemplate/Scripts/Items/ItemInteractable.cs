@@ -17,7 +17,8 @@ public class ItemInteractable : ItemActions {
 
 	//trigger enter
 	void OnTriggerEnter2D(Collider2D coll) {
-		if(coll.CompareTag ("Player") && item.isPickup){ 
+		if(coll.CompareTag ("Player") && item.isPickup){
+			Debug.Log("Collision detected");
 			coll.GetComponent<PlayerCombat>().itemInRange = gameObject;
 		}
 	}
@@ -36,8 +37,8 @@ public class ItemInteractable : ItemActions {
 	}
 
 	//activates this item
-	public void ActivateItem(GameObject _target){
-
+	public void ActivateItem(GameObject _target) 
+	{
 		//set target
 		target = _target;
 
@@ -46,6 +47,9 @@ public class ItemInteractable : ItemActions {
 
 		//play sfx
 		GlobalAudioPlayer.PlaySFX(item.sfx);
+
+		//add to list
+		PlayerInfo.instance.AddItem(item.itemName);
 
 		//remove item
 		Destroy(gameObject);

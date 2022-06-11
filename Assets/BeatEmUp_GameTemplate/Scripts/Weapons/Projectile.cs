@@ -63,7 +63,7 @@ public class Projectile : MonoBehaviour
 
     public void Collided(Enemy npc)
     {
-        if (npc.CompareTag("Enemy"))
+        if (npc.CompareTag("Enemy") && !npc.GetComponent<EnemyActions>().isDead)
         {
             DamageObject d = new DamageObject(damage, gameObject);
             d.attackType = weaponStats.attackType;

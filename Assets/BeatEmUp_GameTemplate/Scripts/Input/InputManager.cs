@@ -20,6 +20,7 @@ public class InputManager : MonoBehaviour {
 	public KeyCode JumpKey = KeyCode.Space;
 	public KeyCode BeamKey = KeyCode.None;
 	public KeyCode DashKey = KeyCode.None;
+	public KeyCode CardFireKey = KeyCode.None;
 
 	private KeyCode[] keycodes = new KeyCode[] { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4, KeyCode.Alpha5 };
 
@@ -111,7 +112,6 @@ public class InputManager : MonoBehaviour {
 
 		if(Input.GetKeyDown(DashKey))
         {
-			Debug.Log("Input event block");
 			CombatInputEvent("Dash");
         }
 	}
@@ -149,6 +149,7 @@ public class InputManager : MonoBehaviour {
 
 	void AssignAbilities()
     {
+		var weapons = FindObjectsOfType<Weapon>();
 		var abilities = PlayerInfo.instance.playerAbilities;
 		for (int i = 0; i < PlayerInfo.instance.playerAbilities.Count; i++)
         {
@@ -160,6 +161,17 @@ public class InputManager : MonoBehaviour {
 			{
 				DashKey = keycodes[i];
 			}
+			if (abilities[i] == "card")
+            {
+				CardFireKey = keycodes[i];
+				foreach (Weapon weapon in weapons)
+                {
+					if (weapon.weaponStats.itemName == "card")
+                    {
+						weapon.fireKey = CardFireKey;
+                    }
+                }
+            }
 		}
     }
 

@@ -1,13 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerInfo : MonoBehaviour
 {
     public static PlayerInfo instance;
     public List<GameObject> playerPowerUps = new List<GameObject>();
     public List<string> playerAbilities = new List<string>();
+    public List<string> acquiredItems = new List<string>();
     private GameObject player;
+
+
+    [Header("Hotbar")]
+    public GameObject hotbarUI;
+    public GameObject[] powerupPanels;
+    public Image[] powerupImages;
 
     private void Awake()
     {
@@ -31,14 +39,23 @@ public class PlayerInfo : MonoBehaviour
 
     public void InstantiatePowerUps(GameObject player)
     {
-        foreach (GameObject powerUp in playerPowerUps)
+        hotbarUI.SetActive(true);
+        for (int i = 0; i < playerPowerUps.Count; i++)
         {
-            Instantiate(powerUp, player.transform);
+            var weapon = playerPowerUps[i].GetComponent<PowerupStats>();
+            powerupPanels[i].SetActive(true);
+            powerupImages[i].sprite = weapon.stats.sprite;
+            Instantiate(playerPowerUps[i], player.transform);
         }
     }
 
     public void AddAbility(string ability)
     {
         playerAbilities.Add(ability);
+    }
+
+    public void AddItem(string item)
+    {
+        acquiredItems.Add(item);
     }
 }

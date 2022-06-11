@@ -12,6 +12,7 @@ public class PowerUp : ScriptableObject
     public bool projectile;
     public float projectileSpeed;
     public float projectileLifespan;
+    public bool rotatingProjectile;
     public bool manualWeapon;
     public bool autoFire;
     public float homing;

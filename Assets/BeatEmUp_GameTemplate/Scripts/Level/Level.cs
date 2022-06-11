@@ -5,5 +5,6 @@ using UnityEngine;
 public class Level : MonoBehaviour
 {
     public EnemyWave[] EnemyWaves;
-    public PowerUpTrack[] levelPowerUps;
+    public List<PowerUpTrack> levelPowerUps = new List<PowerUpTrack>();
+    public GameObject[] spawnableItems;
 } 

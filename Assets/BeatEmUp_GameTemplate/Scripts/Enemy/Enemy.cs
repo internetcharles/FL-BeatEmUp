@@ -16,6 +16,7 @@ public class Enemy : MonoBehaviour {
 	public int attackDamage = 2;
 	public float attackInterval = 1f;
 	public bool targetSpotted;
+	public List<GameObject> droppableItems = new List<GameObject>();
 	    
 	//global event handler for enemies
 	public delegate void UnitEventHandler(GameObject Unit);
@@ -26,8 +27,20 @@ public class Enemy : MonoBehaviour {
 
 	//destroy event
 	public void DestroyUnit(){
-		if(OnUnitDestroy != null) OnUnitDestroy(gameObject);
+		SpawnItemOnDeath(gameObject.transform);
+		if (OnUnitDestroy != null) OnUnitDestroy(gameObject);
 		Destroy(gameObject);
+	}
+
+	public void SpawnItemOnDeath(Transform unitLocation)
+    {
+		int randomItemIndex = Random.Range(0, droppableItems.Count - 1);
+		int itemRoll = Random.Range(1, 100);
+
+		if (droppableItems[randomItemIndex].GetComponent<ItemInteractable>().item.dropProbability <= itemRoll)
+        {
+			Instantiate(droppableItems[randomItemIndex], unitLocation.position, Quaternion.identity);
+        }
 	}
 
 	//create event

@@ -15,12 +15,12 @@ public class RoundClearScrn : MonoBehaviour {
 	}
 
 	void OnEnable() {
-		PowerUpItem.onLevelComplete += ShowLevelCompleteScrn;
+		EnemyWaveSystem.onLevelComplete += ShowLevelCompleteScrn;
 		InputManager.onCombatInputEvent += InputEvent;
 	}
 
 	void OnDisable() {
-		PowerUpItem.onLevelComplete -= ShowLevelCompleteScrn;
+		EnemyWaveSystem.onLevelComplete -= ShowLevelCompleteScrn;
 		InputManager.onCombatInputEvent -= InputEvent;
 	}
 

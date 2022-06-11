@@ -322,7 +322,6 @@ public class PlayerCombat : MonoBehaviour {
 		} else if(playerState.currentState == PLAYERSTATE.BEAM)
         {
 			d = BeamData;
-			Debug.Log("WE DID IT!");
         }
 
 		d.inflictor = gameObject;
@@ -468,7 +467,7 @@ public class PlayerCombat : MonoBehaviour {
 		if (itemInRange != null){
 			Item item = itemInRange.GetComponent<ItemInteractable>().item;
 			if (item != null && item.isPickup){
-				itemInRange.GetComponent<ItemInteractable> ().ActivateItem (gameObject);
+				itemInRange.GetComponent<ItemInteractable>().ActivateItem(gameObject);
 				animator.PickUpItem();
 				playerState.SetState (PLAYERSTATE.PICKUPITEM);
 			}
