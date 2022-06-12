@@ -9,6 +9,9 @@ public class CameraFollow : CameraShake {
 	public Vector2 LeftClamp;
 	public Vector2 RightClamp;
 
+	public bool clampInProgress = true;
+	public bool cameraClamped;
+
 	private IEnumerator camShakeCoroutine;
 	private bool allowBacktrack;
 
@@ -29,7 +32,7 @@ public class CameraFollow : CameraShake {
 			Vector3 currentX = GetComponent<Camera>().ScreenToWorldPoint(new Vector3(0,0,0));
 
 			//clamped x and y position
-			float clampedX = (LeftClamp.x > currentX.x) ? transform.position.x :x;
+			float clampedX = (LeftClamp.x > currentX.x) ? transform.position.x : x;
 			y = (y>RightClamp.y) ? y : RightClamp.y;
 			Vector3 ClampedPos = new Vector3(Mathf.Clamp(x, clampedX, RightClamp.x), y, transform.position.z);
 
@@ -37,14 +40,21 @@ public class CameraFollow : CameraShake {
 			transform.position = ClampedPos + (Vector3.up * AdditionalOffset);
 
 			//disable backtrack by adjusting the left clamp position (change this in Tools/Game Settings)
-			if(!allowBacktrack){
+			if (!allowBacktrack){
 				if(x > LeftClamp.x && LeftClamp.x < RightClamp.x) LeftClamp.x = x;
 			}
+
+			if (transform.position.x == RightClamp.x && !clampInProgress)
+            {
+				cameraClamped = true;
+            }
 		}
 	}
 
 	//sets the clamped camera view to the next wave position
 	public void SetNewClampPosition(Vector2 Pos, float lerpTime){
+		cameraClamped = false;
+		clampInProgress = true;
 		StartCoroutine(LerpToNewClamp(Pos, lerpTime));
 	}
 
@@ -66,6 +76,8 @@ public class CameraFollow : CameraShake {
 			t += Time.deltaTime / lerpTime;
 			yield return 0;
 		}
+
+		clampInProgress = false;
 
 		RightClamp = endPos;
 	}

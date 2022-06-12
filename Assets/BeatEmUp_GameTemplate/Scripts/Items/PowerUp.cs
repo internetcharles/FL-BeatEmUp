@@ -6,6 +6,7 @@ using UnityEngine;
 public class PowerUp : ScriptableObject
 {
     public string itemName;
+    public GameObject itemObject;
     public bool ability;
     public Sprite sprite;
     public float damage;

@@ -37,7 +37,7 @@ public class EnemyWaveSystem : MonoBehaviour {
 	public Button itemButton1;
 	public Button itemButton2;
 	public Button itemButton3;
-
+	public TMP_Text roundCompleteText;
 
 
 	void OnEnable(){
@@ -62,7 +62,7 @@ public class EnemyWaveSystem : MonoBehaviour {
 	public void OnLevelStart(){
 		if (onLevelStart != null) onLevelStart();
 		if (cam != null) cam.SetLeftClampedPosition(positionMarkerLeft.position);
-		StartWave();
+		StartCoroutine(StartWave());
 	}
 
 	void onUnitDestroy(GameObject g){
@@ -71,9 +71,9 @@ public class EnemyWaveSystem : MonoBehaviour {
 			if(newWave.waveComplete()){
 				currentWave += 1;
 				if(!allWavesCompleted()){ 
-					StartWave();
+					StartCoroutine(StartWave());
 				} else{
-					SpawnPowerups();
+					StartCoroutine(RoundCompleteCoroutine());
 					currentWave = 0;
 //					if(onLevelComplete != null) onLevelComplete();
 				}
@@ -81,7 +81,7 @@ public class EnemyWaveSystem : MonoBehaviour {
 		}
 	}
 
-	public void StartWave(){
+	IEnumerator StartWave(){
 		newWave = Instantiate(Levels[currentLevel].EnemyWaves[currentWave]);
 		if (Levels[currentLevel].EnemyWaves.Length > currentWave + 1)
         {
@@ -100,13 +100,21 @@ public class EnemyWaveSystem : MonoBehaviour {
 				} else {
 					cam.SetNewClampPosition(positionMarker, 1.5f);
 				}
+				while (!cam.cameraClamped)
+                {
+					yield return 0;
+                }
 				//enable the enemies of this wave
-				foreach (GameObject g in newWave.EnemyList)
+				for (int i = 0; i < newWave.EnemyList.Count; i++)
 				{
-					float spawnXOffset = Random.Range(0f, 3f);
+					float spawnXOffset = Random.Range(5f, 10f);
 					float enemySpawnY = Random.Range(0f, 5.5f);
-					GameObject enemyFighter = Instantiate(g, new Vector3(positionMarker.x + spawnXOffset, Mathf.Clamp((bottomOfLevel.position.y + enemySpawnY), bottomOfLevel.position.y, topOfLevel.position.y), positionMarker.z), Quaternion.identity);
-					newWave.AddToLivingEnemies(g);
+					List<Vector3> spawnPositions = new List<Vector3>();
+					spawnPositions.Add(new Vector3(cam.LeftClamp.x - 5 - spawnXOffset, enemySpawnY, 0f));
+					spawnPositions.Add(new Vector3(cam.RightClamp.x + 5 + spawnXOffset, enemySpawnY, 0f));
+					int randomSpawnPoint = Random.Range(0, 2);
+					GameObject enemyFighter = Instantiate(newWave.EnemyList[i], new Vector3(spawnPositions[randomSpawnPoint].x, Mathf.Clamp((bottomOfLevel.position.y + enemySpawnY), bottomOfLevel.position.y, topOfLevel.position.y), positionMarker.z), Quaternion.identity);
+					newWave.AddToLivingEnemies(enemyFighter);
 					enemyFighter.SetActive(true);
 				}
 
@@ -132,9 +140,25 @@ public class EnemyWaveSystem : MonoBehaviour {
 		}
 	}
 
+	IEnumerator RoundCompleteCoroutine()
+    {
+		roundCompleteText.gameObject.SetActive(true);
+		yield return new WaitForSeconds(8); 
+		roundCompleteText.gameObject.SetActive(false);
+		yield return new WaitForSeconds(1);
+		SpawnPowerups();
+	}
+
 	void SpawnPowerups()
     {
-		// Delay by 5 seconds
+		GameObject player = GameObject.FindGameObjectWithTag("Player");
+		Destroy(player);
+		GameObject[] items = GameObject.FindGameObjectsWithTag("Item");
+		foreach (GameObject item in items)
+        {
+			Destroy(item);
+        }
+
 		Levels[currentLevel].levelPowerUps = Levels[currentLevel].levelPowerUps.OrderBy(a => Guid.NewGuid()).ToList();
 		itemUI.SetActive(true);
 
@@ -165,7 +189,7 @@ public class EnemyWaveSystem : MonoBehaviour {
 		var powerUpStats = powerUpToEnable.weaponStats;
 		if (powerUpStats.ability)
 		{
-			PlayerInfo.instance.AddAbility(powerUpStats.itemName);
+			PlayerInfo.instance.AddAbility(powerUpToEnable.weapon);
 		}
 		else
 		{

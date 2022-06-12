@@ -37,7 +37,7 @@ public class Enemy : MonoBehaviour {
 		int randomItemIndex = Random.Range(0, droppableItems.Count - 1);
 		int itemRoll = Random.Range(1, 100);
 
-		if (droppableItems[randomItemIndex].GetComponent<ItemInteractable>().item.dropProbability <= itemRoll)
+		if (droppableItems[randomItemIndex].GetComponent<ItemInteractable>().item.dropProbability >= itemRoll)
         {
 			Instantiate(droppableItems[randomItemIndex], unitLocation.position, Quaternion.identity);
         }

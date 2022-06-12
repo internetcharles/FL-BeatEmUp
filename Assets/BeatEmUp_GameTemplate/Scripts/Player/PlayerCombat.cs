@@ -179,12 +179,9 @@ public class PlayerCombat : MonoBehaviour {
 
 	void doBeam()
     {
-		if (PlayerInfo.instance.playerAbilities.Contains("beam"))
-        {
-			playerState.SetState(PLAYERSTATE.BEAM);
-			animator.Beam();
-			LastAttackTime = Time.time;
-		}
+		playerState.SetState(PLAYERSTATE.BEAM);
+		animator.Beam();
+		LastAttackTime = Time.time;
     }
 
 	//start defending

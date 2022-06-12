@@ -75,7 +75,7 @@ public class RoundClearScrn : MonoBehaviour {
 	void AdvanceLevel(){
 		fader.Fade(UIFader.FADE.FadeIn, .5f, 1f);
 		text.gameObject.SetActive(false);
-
+		restartInProgress = false;
 		EnemyWaveSystem EWS = GameObject.FindObjectOfType<EnemyWaveSystem>();
 		if (EWS != null) EWS.OnLevelStart();
 	}

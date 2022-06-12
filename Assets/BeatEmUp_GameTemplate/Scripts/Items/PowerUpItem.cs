@@ -28,7 +28,7 @@ public class PowerUpItem : MonoBehaviour
                 if (powerUpStats.ability)
                 {
                     powerUpToEnable.gameObject.SetActive(true);
-                    PlayerInfo.instance.AddAbility(powerUpStats.itemName);
+                    PlayerInfo.instance.AddAbility(powerUpToEnable);
                 }
                 else
                 {

@@ -153,15 +153,15 @@ public class InputManager : MonoBehaviour {
 		var abilities = PlayerInfo.instance.playerAbilities;
 		for (int i = 0; i < PlayerInfo.instance.playerAbilities.Count; i++)
         {
-			if (abilities[i] == "beam")
+			if (abilities[i].name == "Beam")
             {
 				BeamKey = keycodes[i];
             }
-			if (abilities[i] == "dash")
+			if (abilities[i].name == "Dash")
 			{
 				DashKey = keycodes[i];
 			}
-			if (abilities[i] == "card")
+			if (abilities[i].name == "Card")
             {
 				CardFireKey = keycodes[i];
 				foreach (Weapon weapon in weapons)
